@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>対応待ちbot ｜ 使い方ガイド</title>
+<style>
+  :root{--ink:#222838;--sub:#5b6472;--line:#e9ebf1;--bg:#f7f8fb;--card:#fff;
+    --amber:#f0a93a;--pink:#ff5fa2;--green:#27b07a;--gray:#9aa3b2;--blue:#5b8cff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.9;font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 80px}
+  header.hero{background:linear-gradient(125deg,#ff7eb3,#9b7bff 55%,#5b8cff);color:#fff;padding:52px 22px 40px;text-align:center}
+  header.hero .bear{font-size:40px}
+  header.hero h1{margin:6px 0 8px;font-size:29px;line-height:1.35}
+  header.hero p{margin:0;opacity:.96;font-size:15px}
+  h2{font-size:22px;margin:46px 0 8px;text-align:center}
+  .lead{text-align:center;color:var(--sub);max-width:680px;margin:0 auto 16px}
+  h3{font-size:17px;margin:22px 0 6px}
+  .steps{counter-reset:s;display:grid;gap:18px;margin-top:14px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+  .step .head{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+  .step .no{flex:0 0 auto;width:38px;height:38px;border-radius:50%;color:#fff;font-weight:800;
+    display:flex;align-items:center;justify-content:center;font-size:17px;background:linear-gradient(135deg,var(--pink),var(--blue))}
+  .step h3{margin:0;font-size:17px}
+  .step p{margin:6px 0 0;color:#333}
+  figure{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  figure img{display:block;width:100%;height:auto}
+  figure figcaption{font-size:13px;color:var(--sub);padding:8px 12px;background:#fbfcfe;border-top:1px solid var(--line)}
+  .ph{display:flex;align-items:center;justify-content:center;min-height:130px;color:#8a93a3;font-size:13.5px;text-align:center;padding:20px;
+    background:repeating-linear-gradient(45deg,#f4f6fb,#f4f6fb 12px,#eef1f7 12px,#eef1f7 24px)}
+  .stampgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:10px}
+  @media(max-width:680px){.stampgrid{grid-template-columns:1fr 1fr}}
+  .stamp{text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 8px}
+  .dot{width:50px;height:50px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:800}
+  .stamp .nm{font-weight:800;font-size:14px}
+  .stamp .ds{color:var(--sub);font-size:12px;margin-top:3px}
+  .note{background:#eef6ff;border:1px solid #d3e6f7;border-radius:12px;padding:14px 18px;margin:14px 0}
+  .faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+  .faq b{color:var(--blue)}
+  .pill{display:inline-block;background:#eef2fb;color:#3a55a8;border-radius:20px;padding:1px 10px;font-size:13px;font-weight:700}
+  footer{margin-top:48px;text-align:center;color:var(--sub);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h2 style="margin-top:32px">実際の流れ（Slack画面で）</h2>
+
+  <div class="steps">
+    <!-- 1 -->
+    <div class="step">
+      <div class="head"><div class="no">1</div><h3>依頼が投稿されると、botが見つける</h3></div>
+      <p>対応待ちっぽい依頼に、botが自動で <b>❓（確認中）</b> スタンプを付けます。「これ対応待ちかも」と検知した印です。</p>
+      <figure>
+        <img src="images/detected.png" alt="依頼に❓が付く" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ①：依頼メッセージに <b>❓（確認中）</b> スタンプが付いた様子</div>
+        <figcaption>スクショ①：検知された依頼に ❓ が付く。</figcaption>
+      </figure>
+    </div>
+
+    <!-- 2 -->
+    <div class="step">
+      <div class="head"><div class="no">2</div><h3>担当者に「これ対応待ち？」と確認DMが届く</h3></div>
+      <p>botから <b>「未確定の対応待ち候補があります」</b> というDMが届きます。内容と担当を見て、<b>🚩対応待ちにする</b> か <b>—不要</b> を選んでください。「不要」を選べば二度と聞かれません。</p>
+      <figure>
+        <img src="images/confirm-dm.png" alt="確認DM" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ②：botからの<b>確認DM</b>（🚩対応待ちにする / —不要 / 確認する ボタン）</div>
+        <figcaption>スクショ②：確認DM。ワンタップで要否を選ぶ。</figcaption>
+      </figure>
+    </div>
+
+    <!-- 3 -->
+    <div class="step">
+      <div class="head"><div class="no">3</div><h3>「対応待ちにする」を押すと、期日をカレンダーで選ぶ</h3></div>
+      <p><b>🚩対応待ちにする</b> を押すと、期日設定の画面が開きます。AIが予定などから期日を提案してくれるので、確認して <b>「この期日で設定する」</b> を押すだけ。</p>
+      <figure>
+        <img src="images/due-modal.png" alt="期日設定モーダル" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ③：<b>期日設定モーダル</b>（日付・時刻ピッカー、提案値がプリフィル）</div>
+        <figcaption>スクショ③：期日をカレンダーで選ぶだけ。</figcaption>
+      </figure>
+    </div>
+
+    <!-- 4 -->
+    <div class="step">
+      <div class="head"><div class="no">4</div><h3>「対応待ち」に登録完了</h3></div>
+      <p>これで追跡開始。依頼メッセージのスタンプが <b>🚩（対応待ち）</b> に変わり、担当・期限がカードで表示されます。</p>
+      <figure>
+        <img src="images/flagged-card.png" alt="対応待ち登録カード" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ④：<b>「🚩 対応待ちに登録しました」カード</b>（担当・タスク・期限）</div>
+        <figcaption>スクショ④：登録完了カード。</figcaption>
+      </figure>
+    </div>
+
+    <!-- 5 -->
+    <div class="step">
+      <div class="head"><div class="no">5</div><h3>期日が近づくと、そっとリマインド</h3></div>
+      <p>前日・当日・期日を過ぎたタイミングで、担当者にお知らせが届きます。覚えておく負担はもう要りません。</p>
+      <figure>
+        <img src="images/reminder-dm.png" alt="リマインドDM" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ⑤：<b>リマインドDM</b>（「本日が期日です」「🔴期日を過ぎています」など）</div>
+        <figcaption>スクショ⑤：期日前後のリマインド。</figcaption>
+      </figure>
+    </div>
+
+    <!-- 6 -->
+    <div class="step">
+      <div class="head"><div class="no">6</div><h3>終わったら「完了スタンプ」を付ける</h3></div>
+      <p>対応が終わったら、その依頼メッセージに <b>✅（完了）</b> スタンプを付けるだけ。これでリマインドは止まり、対応待ちリストから消えます。</p>
+      <figure>
+        <img src="images/done.png" alt="完了スタンプ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">スクショ⑥：依頼メッセージに <b>✅（完了）</b> スタンプを付けた様子</div>
+        <figcaption>スクショ⑥：完了スタンプで終了。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <h2 style="margin-top:40px">AIに投げているプロンプト（参考）</h2>
+  <p class="lead">検出時、各投稿について Claude（Opus）へ次の2つを送り、判定結果を受け取っています。<br><span style="font-size:12px">実装：<code>backend/src/detection/classifier.ts</code></span></p>
+
+  <h3>① システムプロンプト（判定ルール）</h3>
+  <pre><code>あなたはReBear（マーケ/クリエイティブ受託＋自社事業）のSlack運用アシスタント。
+渡されたメッセージとスレッド文脈から、「誰かの対応・回答・成果物提出を待っている未充足の用件」を検出する。
+
+ルール:
+- 依頼/約束/確認要求＋メンションがあり、後続に成果物(file/link)・完了文・rb-done/rb-docが無ければ未充足。
+- 予定(日時)に紐づく準備物の依頼で、その時刻が迫る/過ぎても成果物が無ければ escalate=true。
+- 口頭/DM/別ch/Notionで済んでいる可能性は分からない前提。確信が持てない時は
+  resolved=false, confidence低め, needs_confirmation=true。
+- owner(担当)はメンション先 or 「やります」宣言者。曖昧なら confidence を下げる。
+必ず record_classification ツールを1回だけ呼び出して結果を返すこと。</code></pre>
+
+  <h3>② ユーザーメッセージ（投稿ごとに動的生成）</h3>
+  <pre><code>基準時刻: {現在時刻のISO}
+判定対象メッセージ: {投稿本文}
+スレッド文脈(新しい順): {親＋直近返信／なければ(なし)}
+既存リアクション: {rb-* 等／なければ(なし)}
+添付/リンク有無: file={true|false} / link={true|false}</code></pre>
+
+  <div class="note">
+    判定の厳しさやノイズを調整したい場合は ① のルールを編集します（例：「相槌・独り言・意味のない発言は actionable にしない」を追記）。
+  </div>
+
+  <h2 style="margin-top:40px">かかる費用感</h2>
+  <p class="lead">費用はほぼ <b>Claude（Opus）のAPI利用料</b>です。現在は「監視チャンネルの投稿ごとに1回 Opus を呼ぶ」構成なので、<b>費用 ≒ 監視チャンネルの発言数 × 1回あたり単価</b>になります。</p>
+  <table>
+    <tr><th>項目</th><th>内容</th></tr>
+    <tr><td>料金モデル</td><td>Claude Opus：入力 $5 / 出力 $25（100万トークンあたり）</td></tr>
+    <tr><td>1回（1投稿）あたり</td><td>本文＋スレッド文脈＋判定結果で概ね <b>数百〜千数百トークン</b>程度（短文入力・短いJSON出力）。1件あたりおよそ <b>$0.005〜0.02</b>（数百分の数ドル）が目安</td></tr>
+    <tr><td>月コストの目安</td><td>監視chの発言が 1日 1,000件 なら 月 約 $150〜、3,000件 なら 月 約 $450〜（あくまで概算。文脈量で増減）</td></tr>
+    <tr><td>その他</td><td>Slack API・ローカル実行は無料。本番運用時はホスティング（Cloud Run等）＋DB（Cloud SQL）の費用が別途発生</td></tr>
+  </table>
+  <div class="note">
+    <b>コストを下げるには</b>：① 監視チャンネルを絞る（雑談chを外す）、② 検出前に<b>前フィルタ</b>（キーワード/メンション、または軽量モデル Claude Haiku）を挟んで Opus に渡す件数を減らす、③ 確信度の低い検出を間引く。現在は「取りこぼしゼロ優先」で全投稿を Opus に通す設定です。
+  </div>
+
+  <h2 style="margin-top:40px">現状の課題点</h2>
+  <table>
+    <tr><th>課題</th><th>内容 / 影響</th></tr>
+    <tr><td>全投稿を Opus で判定</td><td>前フィルタを外しているため、雑談を含む全発言で Opus が動く＝<b>トークン消費が大きい</b>。アクティブなチャンネルほどコスト増</td></tr>
+    <tr><td>スレッド内の重複検出</td><td>同じスレッドの親と返信が<b>別々のタスクとして重複登録</b>されることがある（重複排除がメッセージ単位のため）</td></tr>
+    <tr><td>担当推定の曖昧さ</td><td>内容が不明確な依頼は担当(owner)が特定できず、確認DMの宛先が決まらないことがある</td></tr>
+    <tr><td>口頭・別ツールでの完了が見えない</td><td>Slack外で対応が済んでも検知できない。完了は人が <b>✅</b> を付ける運用に依存</td></tr>
+    <tr><td>未実装の磨き込み</td><td>手動フラグ時の重複防止、リアクション取り消し時の状態戻し、<code>:rb-doc:</code>＋成果物での自動クローズ等は今後の対応</td></tr>
+  </table>
+
+  <footer>
+    対応待ちbot ／ 使い方ガイド ／ 2026
+  </footer>
+</div>
+</body>
+</html>
