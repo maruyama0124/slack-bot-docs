@@ -152,14 +152,16 @@
   </div>
 
   <h2 style="margin-top:40px">かかる費用感</h2>
-  <p class="lead">費用は <b>① Claude API（判定）</b>・<b>② サーバー</b>・<b>③ データベース</b> の3つ。Slack API は無料です。<br>ここでは <b>有料で一番安い構成</b>（小型VPSにDB同居）＋ <b>1日の投稿 100〜200 件</b>で試算します。</p>
+  <p class="lead">費用は <b>① Claude API（判定）</b>・<b>② サーバー</b>・<b>③ データベース</b> の3つ。Slack API は無料です。<br>ここでは <b>有料で一番安い構成</b>（小型VPSにDB同居）＋ <b>1日の投稿 500〜2,000 件</b>で試算します。</p>
 
-  <h3>① Claude API（判定） — 1日 100〜200 件</h3>
+  <h3>① Claude API（判定） — 1日 500〜2,000 件</h3>
   <p class="lead" style="margin-bottom:8px">投稿ごとに1回 Opus を呼ぶので <b>費用 ≒ 発言数 × 1件あたり単価</b>。1件あたり概ね <b>$0.005〜0.02</b>（中央値 約 $0.01）。</p>
   <table>
     <tr><th>投稿数</th><th>1日あたり</th><th class="num">月額（×30日）</th></tr>
-    <tr><td>1日 100 件</td><td>$0.5〜2.0（中央値 約 $1）</td><td class="num"><b>約 $15〜60</b>（目安 $30）</td></tr>
-    <tr><td>1日 200 件</td><td>$1.0〜4.0（中央値 約 $2）</td><td class="num"><b>約 $30〜120</b>（目安 $60）</td></tr>
+    <tr><td>1日 500 件</td><td>$2.5〜10（中央値 約 $5）</td><td class="num"><b>約 $75〜300</b>（目安 $150）</td></tr>
+    <tr><td>1日 1,000 件</td><td>$5〜20（中央値 約 $10）</td><td class="num"><b>約 $150〜600</b>（目安 $300）</td></tr>
+    <tr><td>1日 1,500 件</td><td>$7.5〜30（中央値 約 $15）</td><td class="num"><b>約 $225〜900</b>（目安 $450）</td></tr>
+    <tr><td>1日 2,000 件</td><td>$10〜40（中央値 約 $20）</td><td class="num"><b>約 $300〜1,200</b>（目安 $600）</td></tr>
   </table>
 
   <h3>② サーバー（有料・最安）</h3>
@@ -178,12 +180,13 @@
   </table>
 
   <h3>合計の目安（月額・有料最安）</h3>
+  <p class="lead" style="margin-bottom:8px">固定費は <b>サーバー $5 ＋ DB $0 = 月 $5</b>。これに投稿量に比例する Claude 代が乗ります。</p>
   <table>
-    <tr><th>区分</th><th>内訳</th><th class="num">月額</th></tr>
-    <tr><td>Claude API</td><td>1日100〜200件（変動費）</td><td class="num">$15〜120</td></tr>
-    <tr><td>サーバー</td><td>小型VPS</td><td class="num">約 $5</td></tr>
-    <tr><td>データベース</td><td>MySQL を同居</td><td class="num">$0</td></tr>
-    <tr class="tot"><td>合計</td><td><b>固定費は月 $5 だけ。残りは Claude 代。目安は月 $35〜65</b></td><td class="num"><b>約 $20〜125</b></td></tr>
+    <tr><th>1日の投稿数</th><th>Claude API</th><th class="num">サーバー＋DB</th><th class="num">合計／月（目安）</th></tr>
+    <tr><td>500 件</td><td>$75〜300</td><td class="num">$5</td><td class="num"><b>約 $80〜305</b>（$155）</td></tr>
+    <tr><td>1,000 件</td><td>$150〜600</td><td class="num">$5</td><td class="num"><b>約 $155〜605</b>（$305）</td></tr>
+    <tr><td>1,500 件</td><td>$225〜900</td><td class="num">$5</td><td class="num"><b>約 $230〜905</b>（$455）</td></tr>
+    <tr class="tot"><td>2,000 件</td><td>$300〜1,200</td><td class="num">$5</td><td class="num"><b>約 $305〜1,205</b>（$605）</td></tr>
   </table>
 
   <div class="note">
