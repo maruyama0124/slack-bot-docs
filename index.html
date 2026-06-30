@@ -152,7 +152,7 @@
   </div>
 
   <h2 style="margin-top:40px">かかる費用感</h2>
-  <p class="lead">費用は <b>① Claude API（判定）</b>・<b>② サーバー</b>・<b>③ データベース</b> の3つ。Slack API は無料です。<br>ここでは <b>有料で一番安い構成</b>（小型VPSにDB同居）＋ <b>1日の投稿 500〜2,000 件</b>で試算します。</p>
+  <p class="lead">費用は <b>① Claude API（判定）</b>・<b>② サーバー</b>・<b>③ データベース</b> の3つ。Slack API は無料です。<br>ここでは <b>Amazon Lightsail（2GBプラン）にbot＋MySQLを同居</b>させる構成＋ <b>1日の投稿 500〜2,000 件</b>で試算します。</p>
 
   <h3>① Claude API（判定） — 1日 500〜2,000 件</h3>
   <p class="lead" style="margin-bottom:8px">投稿ごとに1回 Opus を呼ぶので <b>費用 ≒ 発言数 × 1件あたり単価</b>。1件あたり概ね <b>$0.005〜0.02</b>（中央値 約 $0.01）。</p>
@@ -164,34 +164,35 @@
     <tr><td>1日 2,000 件</td><td>$10〜40（中央値 約 $20）</td><td class="num"><b>約 $300〜1,200</b>（目安 $600）</td></tr>
   </table>
 
-  <h3>② サーバー（有料・最安）</h3>
-  <p class="lead" style="margin-bottom:8px">Socket Mode は<b>常時接続</b>が必要なため、停止して$0にはできません。有料で一番安いのは <b>小型VPS（Hetzner / AWS Lightsail / Vultr 等）</b>。月$5前後で 2〜4GB RAM が使え、DB同居も余裕です。</p>
+  <h3>② サーバー（Amazon Lightsail）</h3>
+  <p class="lead" style="margin-bottom:8px">Socket Mode は<b>常時接続</b>が必要なため、停止して$0にはできません。今回は <b>Lightsail の 2GBプラン（月$12）</b>を採用。bot常駐に余裕があり、同じサーバー内に MySQL も同居できます。</p>
   <table>
-    <tr><th>サービス</th><th>用途</th><th class="num">月額（最安）</th></tr>
-    <tr><td>小型VPS（例: Lightsail / Hetzner）</td><td>bot本体を常時稼働</td><td class="num"><b>約 $5</b></td></tr>
-    <tr><td>cron（VM内のcrontab）</td><td>確認・リマインドの定期実行</td><td class="num"><b>$0</b>（VMに含む）</td></tr>
+    <tr><th>サービス</th><th>用途</th><th class="num">月額</th></tr>
+    <tr><td>Lightsail 2GB（2 vCPU / 60GB SSD）</td><td>bot本体を常時稼働＋DB同居</td><td class="num"><b>$12</b><br><span style="font-size:12px">※ 最初の90日間は無料</span></td></tr>
+    <tr><td>cron（サーバー内のcrontab）</td><td>確認・リマインドの定期実行</td><td class="num"><b>$0</b>（含む）</td></tr>
+    <tr><td>静的IP</td><td>IP固定（再起動でも変わらない）</td><td class="num"><b>$0</b>（無料）</td></tr>
   </table>
 
-  <h3>③ データベース（有料・最安）</h3>
+  <h3>③ データベース</h3>
   <table>
-    <tr><th>方式</th><th>用途</th><th class="num">月額（最安）</th></tr>
-    <tr><td>同じVPSに MySQL を同居</td><td>タスク・通知履歴の永続化</td><td class="num"><b>$0</b>（VPSに含む）</td></tr>
-    <tr><td>（参考）マネージド Cloud SQL 最小</td><td>運用を楽にする場合</td><td class="num">約 $9〜12</td></tr>
+    <tr><th>方式</th><th>用途</th><th class="num">月額</th></tr>
+    <tr><td>同じLightsailに MySQL を同居</td><td>タスク・通知履歴の永続化</td><td class="num"><b>$0</b>（サーバーに含む）</td></tr>
+    <tr><td>（参考）マネージドDBに分離する場合</td><td>運用を楽にしたい場合の選択肢</td><td class="num">＋$9〜15</td></tr>
   </table>
 
-  <h3>合計の目安（月額・有料最安）</h3>
-  <p class="lead" style="margin-bottom:8px">固定費は <b>サーバー $5 ＋ DB $0 = 月 $5</b>。これに投稿量に比例する Claude 代が乗ります。</p>
+  <h3>合計の目安（月額・Lightsail構成）</h3>
+  <p class="lead" style="margin-bottom:8px">固定費は <b>Lightsail $12（DB込み・最初90日無料）</b>のみ。これに投稿量に比例する Claude 代が乗ります。</p>
   <table>
     <tr><th>1日の投稿数</th><th>Claude API</th><th class="num">サーバー＋DB</th><th class="num">合計／月（目安）</th></tr>
-    <tr><td>500 件</td><td>$75〜300</td><td class="num">$5</td><td class="num"><b>約 $80〜305</b>（$155）</td></tr>
-    <tr><td>1,000 件</td><td>$150〜600</td><td class="num">$5</td><td class="num"><b>約 $155〜605</b>（$305）</td></tr>
-    <tr><td>1,500 件</td><td>$225〜900</td><td class="num">$5</td><td class="num"><b>約 $230〜905</b>（$455）</td></tr>
-    <tr class="tot"><td>2,000 件</td><td>$300〜1,200</td><td class="num">$5</td><td class="num"><b>約 $305〜1,205</b>（$605）</td></tr>
+    <tr><td>500 件</td><td>$75〜300</td><td class="num">$12</td><td class="num"><b>約 $87〜312</b>（$162）</td></tr>
+    <tr><td>1,000 件</td><td>$150〜600</td><td class="num">$12</td><td class="num"><b>約 $162〜612</b>（$312）</td></tr>
+    <tr><td>1,500 件</td><td>$225〜900</td><td class="num">$12</td><td class="num"><b>約 $237〜912</b>（$462）</td></tr>
+    <tr class="tot"><td>2,000 件</td><td>$300〜1,200</td><td class="num">$12</td><td class="num"><b>約 $312〜1,212</b>（$612）</td></tr>
   </table>
 
   <div class="note">
-    <b>補足</b>：上記は有料で一番安い構成（小型VPS 1台にbotとMySQLを同居）です。VPSなら 2〜4GB RAM が月$5前後で使え、MySQL同居でも安定します。さらに運用を楽にしたい場合は <b>マネージド構成（Cloud Run ＋ Cloud SQL）で固定費 月 $25〜55 ほど</b>。Claude 代を抑えるには、検出前に<b>前フィルタ</b>（キーワード/メンション、または軽量モデル <b>Claude Haiku</b>：入力 $1 / 出力 $5）を挟んで Opus に渡す件数を減らすのが効果的です。<br>
-    <span style="font-size:12px">※ 金額はいずれも概算。為替・リージョン・実トラフィックで変動します。正確な値は数日分のログからトークン数を実測して算出できます。</span>
+    <b>補足</b>：Lightsail 2GB 1台に bot と MySQL を同居させる構成です。<b>最初の90日間はサーバー代が無料</b>なので、その間は実質 Claude 代のみで運用できます。費用の主役は Claude API なので、抑えたい場合は検出前に<b>前フィルタ</b>（キーワード/メンション、または軽量モデル <b>Claude Haiku</b>：入力 $1 / 出力 $5）を挟んで Opus に渡す件数を減らすのが効果的です。<br>
+    <span style="font-size:12px">※ 金額はいずれも概算。為替・実トラフィックで変動します。正確な値は数日分のログからトークン数を実測して算出できます。</span>
   </div>
 
   <h2 style="margin-top:40px">現状の課題点</h2>
