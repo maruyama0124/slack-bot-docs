@@ -40,6 +40,15 @@
   .faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
   .faq b{color:var(--blue)}
   .pill{display:inline-block;background:#eef2fb;color:#3a55a8;border-radius:20px;padding:1px 10px;font-size:13px;font-weight:700}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px;background:#fff;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f3f5fb;font-weight:800;font-size:13.5px;color:#3a4255}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  .tot{background:#fff7ec}
+  .tot td{font-weight:800}
+  table .num{white-space:nowrap;font-variant-numeric:tabular-nums}
   footer{margin-top:48px;text-align:center;color:var(--sub);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
 </style>
 </head>
@@ -143,16 +152,43 @@
   </div>
 
   <h2 style="margin-top:40px">かかる費用感</h2>
-  <p class="lead">費用はほぼ <b>Claude（Opus）のAPI利用料</b>です。現在は「監視チャンネルの投稿ごとに1回 Opus を呼ぶ」構成なので、<b>費用 ≒ 監視チャンネルの発言数 × 1回あたり単価</b>になります。</p>
+  <p class="lead">費用は <b>① Claude API（判定）</b>・<b>② サーバー</b>・<b>③ データベース</b> の3つ。Slack API は無料です。<br>ここでは <b>有料で一番安い構成</b>（小型VPSにDB同居）＋ <b>1日の投稿 100〜200 件</b>で試算します。</p>
+
+  <h3>① Claude API（判定） — 1日 100〜200 件</h3>
+  <p class="lead" style="margin-bottom:8px">投稿ごとに1回 Opus を呼ぶので <b>費用 ≒ 発言数 × 1件あたり単価</b>。1件あたり概ね <b>$0.005〜0.02</b>（中央値 約 $0.01）。</p>
   <table>
-    <tr><th>項目</th><th>内容</th></tr>
-    <tr><td>料金モデル</td><td>Claude Opus：入力 $5 / 出力 $25（100万トークンあたり）</td></tr>
-    <tr><td>1回（1投稿）あたり</td><td>本文＋スレッド文脈＋判定結果で概ね <b>数百〜千数百トークン</b>程度（短文入力・短いJSON出力）。1件あたりおよそ <b>$0.005〜0.02</b>（数百分の数ドル）が目安</td></tr>
-    <tr><td>月コストの目安</td><td>監視chの発言が 1日 1,000件 なら 月 約 $150〜、3,000件 なら 月 約 $450〜（あくまで概算。文脈量で増減）</td></tr>
-    <tr><td>その他</td><td>Slack API・ローカル実行は無料。本番運用時はホスティング（Cloud Run等）＋DB（Cloud SQL）の費用が別途発生</td></tr>
+    <tr><th>投稿数</th><th>1日あたり</th><th class="num">月額（×30日）</th></tr>
+    <tr><td>1日 100 件</td><td>$0.5〜2.0（中央値 約 $1）</td><td class="num"><b>約 $15〜60</b>（目安 $30）</td></tr>
+    <tr><td>1日 200 件</td><td>$1.0〜4.0（中央値 約 $2）</td><td class="num"><b>約 $30〜120</b>（目安 $60）</td></tr>
   </table>
+
+  <h3>② サーバー（有料・最安）</h3>
+  <p class="lead" style="margin-bottom:8px">Socket Mode は<b>常時接続</b>が必要なため、停止して$0にはできません。有料で一番安いのは <b>小型VPS（Hetzner / AWS Lightsail / Vultr 等）</b>。月$5前後で 2〜4GB RAM が使え、DB同居も余裕です。</p>
+  <table>
+    <tr><th>サービス</th><th>用途</th><th class="num">月額（最安）</th></tr>
+    <tr><td>小型VPS（例: Lightsail / Hetzner）</td><td>bot本体を常時稼働</td><td class="num"><b>約 $5</b></td></tr>
+    <tr><td>cron（VM内のcrontab）</td><td>確認・リマインドの定期実行</td><td class="num"><b>$0</b>（VMに含む）</td></tr>
+  </table>
+
+  <h3>③ データベース（有料・最安）</h3>
+  <table>
+    <tr><th>方式</th><th>用途</th><th class="num">月額（最安）</th></tr>
+    <tr><td>同じVPSに MySQL を同居</td><td>タスク・通知履歴の永続化</td><td class="num"><b>$0</b>（VPSに含む）</td></tr>
+    <tr><td>（参考）マネージド Cloud SQL 最小</td><td>運用を楽にする場合</td><td class="num">約 $9〜12</td></tr>
+  </table>
+
+  <h3>合計の目安（月額・有料最安）</h3>
+  <table>
+    <tr><th>区分</th><th>内訳</th><th class="num">月額</th></tr>
+    <tr><td>Claude API</td><td>1日100〜200件（変動費）</td><td class="num">$15〜120</td></tr>
+    <tr><td>サーバー</td><td>小型VPS</td><td class="num">約 $5</td></tr>
+    <tr><td>データベース</td><td>MySQL を同居</td><td class="num">$0</td></tr>
+    <tr class="tot"><td>合計</td><td><b>固定費は月 $5 だけ。残りは Claude 代。目安は月 $35〜65</b></td><td class="num"><b>約 $20〜125</b></td></tr>
+  </table>
+
   <div class="note">
-    <b>コストを下げるには</b>：① 監視チャンネルを絞る（雑談chを外す）、② 検出前に<b>前フィルタ</b>（キーワード/メンション、または軽量モデル Claude Haiku）を挟んで Opus に渡す件数を減らす、③ 確信度の低い検出を間引く。現在は「取りこぼしゼロ優先」で全投稿を Opus に通す設定です。
+    <b>補足</b>：上記は有料で一番安い構成（小型VPS 1台にbotとMySQLを同居）です。VPSなら 2〜4GB RAM が月$5前後で使え、MySQL同居でも安定します。さらに運用を楽にしたい場合は <b>マネージド構成（Cloud Run ＋ Cloud SQL）で固定費 月 $25〜55 ほど</b>。Claude 代を抑えるには、検出前に<b>前フィルタ</b>（キーワード/メンション、または軽量モデル <b>Claude Haiku</b>：入力 $1 / 出力 $5）を挟んで Opus に渡す件数を減らすのが効果的です。<br>
+    <span style="font-size:12px">※ 金額はいずれも概算。為替・リージョン・実トラフィックで変動します。正確な値は数日分のログからトークン数を実測して算出できます。</span>
   </div>
 
   <h2 style="margin-top:40px">現状の課題点</h2>
