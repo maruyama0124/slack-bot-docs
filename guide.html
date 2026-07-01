@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>対応待ちbot ｜ 完全ガイド（社内向け）</title>
+<style>
+  :root{--ink:#222838;--sub:#5b6472;--line:#e9ebf1;--bg:#f7f8fb;--card:#fff;
+    --amber:#f0a93a;--pink:#ff5fa2;--green:#27b07a;--gray:#9aa3b2;--blue:#5b8cff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.9;font-size:16px;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;}
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 80px}
+  header.hero{background:linear-gradient(125deg,#ff7eb3,#9b7bff 55%,#5b8cff);color:#fff;padding:52px 22px 40px;text-align:center}
+  header.hero .bear{font-size:44px}
+  header.hero h1{margin:6px 0 8px;font-size:29px;line-height:1.35}
+  header.hero p{margin:0;opacity:.96;font-size:15px}
+  h2{font-size:22px;margin:46px 0 8px;text-align:center}
+  .lead{text-align:center;color:var(--sub);max-width:700px;margin:0 auto 16px}
+  h3{font-size:17px;margin:22px 0 6px}
+  .tldr{background:#fff;border:1px solid var(--line);border-left:5px solid var(--pink);border-radius:12px;padding:16px 20px;margin:22px 0}
+  .tldr b{color:var(--ink)}
+  .steps{counter-reset:s;display:grid;gap:18px;margin-top:14px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+  .step .head{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+  .step .no{flex:0 0 auto;width:38px;height:38px;border-radius:50%;color:#fff;font-weight:800;
+    display:flex;align-items:center;justify-content:center;font-size:17px;background:linear-gradient(135deg,var(--pink),var(--blue))}
+  .step h3{margin:0;font-size:17px}
+  .step p{margin:6px 0 0;color:#333}
+  figure{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+  figure img{display:block;width:100%;height:auto}
+  figure figcaption{font-size:13px;color:var(--sub);padding:8px 12px;background:#fbfcfe;border-top:1px solid var(--line)}
+  .ph{display:flex;align-items:center;justify-content:center;min-height:130px;color:#8a93a3;font-size:13.5px;text-align:center;padding:20px;
+    background:repeating-linear-gradient(45deg,#f4f6fb,#f4f6fb 12px,#eef1f7 12px,#eef1f7 24px)}
+  .stampgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:10px}
+  @media(max-width:680px){.stampgrid{grid-template-columns:1fr 1fr}}
+  .stamp{text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 8px}
+  .dot{width:50px;height:50px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:800}
+  .stamp .nm{font-weight:800;font-size:13.5px}
+  .stamp .ds{color:var(--sub);font-size:12px;margin-top:3px}
+  .note{background:#eef6ff;border:1px solid #d3e6f7;border-radius:12px;padding:14px 18px;margin:14px 0}
+  .warn{background:#fff5f0;border:1px solid #ffd9c2;border-radius:12px;padding:14px 18px;margin:14px 0}
+  .faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+  .faq b{color:var(--blue)}
+  .pill{display:inline-block;background:#eef2fb;color:#3a55a8;border-radius:20px;padding:1px 10px;font-size:13px;font-weight:700}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px;background:#fff;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f3f5fb;font-weight:800;font-size:13.5px;color:#3a4255}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:12px}
+  @media(max-width:680px){.cards{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .card .ic{font-size:26px}
+  .card h4{margin:6px 0 4px;font-size:15.5px}
+  .card p{margin:0;color:var(--sub);font-size:13.5px}
+  .toc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;margin:22px 0}
+  .toc a{color:#3a55a8;text-decoration:none}
+  .toc li{margin:3px 0}
+  footer{margin-top:48px;text-align:center;color:var(--sub);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+  a.back{display:inline-block;margin-top:10px;color:#fff;opacity:.95;font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="bear">🐻⏰</div>
+  <h1>対応待ちbot 完全ガイド</h1>
+  <p>「あれ、これ誰がやるんだっけ？」をなくす、Slackの見張り番。<br>この1ページを読めば、もう使いこなせます。</p>
+</header>
+
+<div class="wrap">
+
+  <!-- 3行まとめ -->
+  <div class="tldr">
+    <b>⚡️ 3行でわかる</b><br>
+    ① 依頼っぽい投稿にbotが自動で <b>❓</b> を付けて「対応待ちかも」と見張ります。<br>
+    ② 担当者に「対応待ちにする？」と<b>DMで確認</b>が届くので、ボタンを押すだけ。<br>
+    ③ 期日が近づく／過ぎると<b>リマインド</b>。終わったら <b>✅</b> を付けて完了。基本これだけ。
+  </div>
+
+  <!-- 目次 -->
+  <div class="toc">
+    <b>もくじ</b>
+    <ul>
+      <li><a href="#what">1. これは何をしてくれるbot？</a></li>
+      <li><a href="#stamps">2. スタンプ（絵文字）の意味</a></li>
+      <li><a href="#flow">3. 基本の流れ（画面つき）</a></li>
+      <li><a href="#you">4. あなたがやることは3つだけ</a></li>
+      <li><a href="#manual">5. 自分でスタンプを使って操作する</a></li>
+      <li><a href="#timing">6. 通知が届くタイミング</a></li>
+      <li><a href="#faq">7. よくある質問</a></li>
+      <li><a href="#notes">8. 知っておきたい注意点</a></li>
+    </ul>
+  </div>
+
+  <!-- 1. これは何 -->
+  <h2 id="what">1. これは何をしてくれるbot？</h2>
+  <p class="lead">Slackでの「依頼・お願い・準備物」って、流れて忘れられがち。<br>このbotは、そういう<b>「誰かの対応を待っている用件」を自動で見つけて、忘れないように追いかけてくれる</b>アシスタントです。</p>
+  <div class="cards">
+    <div class="card"><div class="ic">🔍</div><h4>見つける</h4><p>依頼っぽい投稿を自動で検知して印を付けます。</p></div>
+    <div class="card"><div class="ic">🔔</div><h4>思い出させる</h4><p>期日が近づく・過ぎると担当者にリマインド。</p></div>
+    <div class="card"><div class="ic">✅</div><h4>片付ける</h4><p>終わったら完了スタンプ。対応漏れをゼロに。</p></div>
+  </div>
+  <div class="note">
+    要するに <b>「言った/言わない」「やり忘れ」「準備物の抜け」を防ぐための見張り番</b>です。あなたが特別な操作を覚える必要はほとんどありません。届いたDMのボタンを押すのがメインです。
+  </div>
+
+  <!-- 2. スタンプ -->
+  <h2 id="stamps">2. スタンプ（絵文字）の意味</h2>
+  <p class="lead">メッセージに付く5種類のスタンプの意味を覚えておくと、状況がひと目で分かります。</p>
+  <div class="stampgrid">
+    <div class="stamp"><div class="dot" style="background:var(--amber)">❓</div><div class="nm">確認中</div><div class="ds">botが「対応待ちかも」と検知した印</div></div>
+    <div class="stamp"><div class="dot" style="background:var(--pink)">🚩</div><div class="nm">対応待ち</div><div class="ds">正式に追跡中。期日リマインドの対象</div></div>
+    <div class="stamp"><div class="dot" style="background:var(--green)">✅</div><div class="nm">完了</div><div class="ds">対応済み。付けるとリマインド停止</div></div>
+    <div class="stamp"><div class="dot" style="background:var(--gray)">🗙</div><div class="nm">対象外</div><div class="ds">追わなくてよい。以後通知しない</div></div>
+    <div class="stamp"><div class="dot" style="background:var(--blue)">📄</div><div class="nm">資料あり</div><div class="ds">成果物・資料が出たことを示す印</div></div>
+  </div>
+  <div class="note">
+    <b>ポイント：</b> <b>❓</b> はbotが自動で付けます。<b>🚩 / ✅ / 🗙</b> は<b>あなたが付けても</b>botが反応します（後述）。難しく考えず「終わったら ✅」だけ覚えればOK。
+  </div>
+
+  <!-- 3. 流れ -->
+  <h2 id="flow">3. 基本の流れ（画面つき）</h2>
+  <p class="lead">実際のSlack画面で、依頼が片付くまでの流れを見てみましょう。</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="head"><div class="no">1</div><h3>依頼が投稿されると、botが見つける</h3></div>
+      <p>対応待ちっぽい依頼に、botが自動で <b>❓（確認中）</b> スタンプを付けます。「これ対応待ちかも」と検知した印です。</p>
+      <figure>
+        <img src="images/detected.png" alt="依頼に❓が付く" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">依頼メッセージに ❓ が付いた様子</div>
+        <figcaption>検知された依頼に ❓ が付く。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="head"><div class="no">2</div><h3>担当者に「これ対応待ち？」と確認DMが届く</h3></div>
+      <p>botから <b>「未確定の対応待ち候補があります」</b> というDMが届きます。内容を見て、<b>🚩対応待ちにする</b> か <b>—不要</b> を選ぶだけ。「不要」を選べば二度と聞かれません。</p>
+      <figure>
+        <img src="images/confirm-dm.png" alt="確認DM" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">botからの確認DM（🚩対応待ちにする / —不要）</div>
+        <figcaption>確認DM。ワンタップで要否を選ぶ。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="head"><div class="no">3</div><h3>「対応待ちにする」を押すと、期日を選ぶ</h3></div>
+      <p><b>🚩対応待ちにする</b> を押すと、期日設定の画面が開きます。日付と時刻を選んで <b>「この期日で設定する」</b> を押すだけ。</p>
+      <figure>
+        <img src="images/due-modal.png" alt="期日設定モーダル" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">期日設定画面（日付・時刻ピッカー）</div>
+        <figcaption>期日をカレンダーで選ぶだけ。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="head"><div class="no">4</div><h3>「対応待ち」に登録完了</h3></div>
+      <p>これで追跡開始。スタンプが <b>🚩（対応待ち）</b> に変わり、担当・期限がカードで表示されます。</p>
+      <figure>
+        <img src="images/flagged-card.png" alt="対応待ち登録カード" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">「🚩 対応待ちに登録しました」カード</div>
+        <figcaption>登録完了カード（担当・タスク・期限）。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="head"><div class="no">5</div><h3>期日が近づくと、そっとリマインド</h3></div>
+      <p>前日・当日・期日を過ぎたタイミングで、担当者にお知らせが届きます。<b>期日を過ぎたものは、片付くまで毎朝リマインド</b>が届くので放置されません。</p>
+      <figure>
+        <img src="images/reminder-dm.png" alt="リマインドDM" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">リマインドDM（本日が期日です／期日を過ぎています 等）</div>
+        <figcaption>期日前後のリマインド。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="head"><div class="no">6</div><h3>終わったら「完了スタンプ」を付ける</h3></div>
+      <p>対応が終わったら、その依頼メッセージに <b>✅（完了）</b> スタンプを付けるだけ。これでリマインドは止まり、対応待ちリストから消えます。</p>
+      <figure>
+        <img src="images/done.png" alt="完了スタンプ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="ph" style="display:none">依頼メッセージに ✅ を付けた様子</div>
+        <figcaption>完了スタンプで終了。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- 4. あなたがやること -->
+  <h2 id="you">4. あなたがやることは3つだけ</h2>
+  <p class="lead">難しい操作は不要。基本はこの3つを押さえればOKです。</p>
+  <table>
+    <tr><th>タイミング</th><th>あなたがやること</th></tr>
+    <tr><td>botから<b>確認DM</b>が届いたら</td><td>対応が必要なら <b>🚩対応待ちにする</b>、不要なら <b>—不要</b> を押す</td></tr>
+    <tr><td>🚩を押した<b>直後</b></td><td>開いた画面で<b>期日を選んで設定</b>する</td></tr>
+    <tr><td>対応が<b>終わったら</b></td><td>その依頼メッセージに <b>✅完了</b> スタンプを付ける</td></tr>
+  </table>
+  <div class="note">
+    💡 <b>「自分宛じゃない依頼」でも大丈夫。</b> 確認DMは基本、依頼された本人（担当者）に届きます。もし担当が違うと感じたら「—不要」でスルーしてOKです。
+  </div>
+
+  <!-- 5. 手動操作 -->
+  <h2 id="manual">5. 自分でスタンプを使って操作する</h2>
+  <p class="lead">botの検知を待たなくても、<b>あなたがスタンプを付けるだけ</b>で操作できます。</p>
+  <table>
+    <tr><th>やりたいこと</th><th>操作</th></tr>
+    <tr><td><b>これ対応待ちにしたい</b>（botが拾ってなくても）</td><td>そのメッセージに <b>🚩</b> を付ける → スレッドに出る「期日を設定」ボタンから期日を入力</td></tr>
+    <tr><td><b>対応が終わった</b></td><td>そのメッセージに <b>✅</b> を付ける → リマインド停止・完了</td></tr>
+    <tr><td><b>これは追わなくていい</b></td><td>そのメッセージに <b>🗙（対象外）</b> を付ける → 以後通知されない</td></tr>
+  </table>
+  <div class="note">
+    つまり、<b>botが見逃した依頼も、あなたが 🚩 を付ければ追跡対象にできます</b>。逆に、口頭やDMで済ませた依頼は <b>✅</b> を付けて完了にしておくと、無駄なリマインドが止まります。
+  </div>
+
+  <!-- 6. タイミング -->
+  <h2 id="timing">6. 通知が届くタイミング</h2>
+  <p class="lead">「いつ通知が来るの？」の早見表です。</p>
+  <table>
+    <tr><th>できごと</th><th>タイミング</th></tr>
+    <tr><td>❓ スタンプが付く（検知）</td><td><b>投稿直後・すぐ</b>（24時間いつでも）</td></tr>
+    <tr><td>確認DM（対応待ちにする？）</td><td><b>平日 9:00〜21:00 の 30分ごと</b>にまとめて届く（最大30分待ち）</td></tr>
+    <tr><td>期日リマインド（前日／当日）</td><td><b>毎朝 9:00</b> にそれぞれ1回</td></tr>
+    <tr><td>期日超過のリマインド</td><td><b>毎朝 9:00・完了/対象外にするまで毎日</b></td></tr>
+  </table>
+  <div class="note">
+    確認DMを「まとめて送る」のは、通知がうるさくならないようにするためです。検知（❓）自体はリアルタイムなので、印はすぐ付きます。
+  </div>
+
+  <!-- 7. FAQ -->
+  <h2 id="faq">7. よくある質問</h2>
+
+  <div class="faq"><b>Q. 自分に関係ない依頼のDMが来たら？</b><br>
+  A. 「—不要」を押せばOK。それ以上通知されません。担当を取り違えていた場合はスルーで大丈夫です。</div>
+
+  <div class="faq"><b>Q. botが依頼を見逃していたら？</b><br>
+  A. そのメッセージに自分で <b>🚩</b> を付ければ、対応待ちとして追跡できます（スレッドに出るボタンから期日を設定）。</div>
+
+  <div class="faq"><b>Q. 口頭やDMで対応が済んだ依頼は？</b><br>
+  A. 元のメッセージに <b>✅</b> を付けてください。botはSlack外のやり取りは分からないので、✅で「終わった」と教えてあげる形です。</div>
+
+  <div class="faq"><b>Q. 期日を間違えて設定した／変えたい</b><br>
+  A. もう一度 🚩 を付け直す、または管理者に連絡してください（期日の再設定に対応します）。</div>
+
+  <div class="faq"><b>Q. リマインドがしつこい</b><br>
+  A. その依頼が終わっているなら <b>✅完了</b>、もう追わなくてよいなら <b>🗙対象外</b> を付ければ止まります。</div>
+
+  <div class="faq"><b>Q. 個人間のDMも見られてる？</b><br>
+  A. いいえ。botは<b>指定された監視チャンネルの投稿だけ</b>を見ます。個人DMは対象外です。</div>
+
+  <!-- 8. 注意点 -->
+  <h2 id="notes">8. 知っておきたい注意点</h2>
+  <div class="warn">
+    <ul style="margin:0;padding-left:1.1em">
+      <li>botが見張るのは <b>指定された監視チャンネルのみ</b>。それ以外のチャンネルや個人DMは対象外です。</li>
+      <li>Slack外（口頭・電話・別ツール）で終わった対応は、botには分かりません。<b>元メッセージに ✅ を付けて</b>完了を教えてください。</li>
+      <li>担当者(owner)は「メンションされた人」や「やります宣言した人」を自動推定します。<b>ズレていたら「—不要」や担当への付け直し</b>で調整してください。</li>
+      <li>AIが自動判定しているため、<b>まれに拾いすぎ／拾い漏れ</b>があります。気になる挙動はお気軽に管理者へ。</li>
+    </ul>
+  </div>
+
+  <div class="note" style="text-align:center">
+    これだけ押さえれば、もう使いこなせます 🎉<br>
+    <b>迷ったら「終わったら ✅、いらなければ 🗙」</b> だけ覚えておけばOKです。
+  </div>
+
+  <footer>
+    対応待ちbot ／ 社内向け完全ガイド ／ 2026<br>
+    <span style="font-size:12px">操作の詳しい流れは <a href="index.html">使い方ガイド（画面つき）</a> も参照。</span>
+  </footer>
+</div>
+</body>
+</html>
